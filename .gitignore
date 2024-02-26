@@ -1,0 +1,38 @@
+# Ignore compiled Python files
+*.pyc
+
+# Ignore Django migration files
+**/migrations/
+
+# Ignore local development settings
+**/settings_local.py
+
+# Ignore database files
+db.sqlite3
+
+# Ignore static files directory
+/staticfiles/
+
+# Ignore media files directory
+/media/
+
+# Ignore environment configuration files
+.env
+
+# Ignore virtual environment directory
+venv/
+
+# Ignore IDE and editor configuration files
+.idea/
+.vscode/
+*.sublime-*
+
+# Ignore system and temporary files
+.DS_Store
+Thumbs.db
+*~
+
+# Ignore dependencies directory
+/node_modules/
+/bower_components/
+/yarn-error.log

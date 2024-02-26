@@ -1,0 +1,23 @@
+{% load i18n %}
+
+{% block subject %}
+{% blocktrans %}{{ site_name }} - Your account has been successfully created and activated!{% endblocktrans %}
+{% endblock %}
+
+{% block text_body %}
+{% trans "Your account has been created and is ready to use!" %}
+
+{% endblock text_body %}
+
+{% block html_body %}
+<p>{% trans "Your account has been created and is ready to use!" %}</p>
+
+<p style="margin-bottom:100px"><a
+    style="display: inline-block; padding: 10px 20px; background-color:   #51ad2d  ; color: white; text-decoration: none;"
+    href="{{ protocol }}://{{ domain }}/account/login">Login to Account</a></p>
+
+
+<i>{% blocktrans %}If you face difficulties in Login to your account kindly contact us on:
+  contact@snippify.com {% endblocktrans %}</i>
+
+{% endblock html_body %}

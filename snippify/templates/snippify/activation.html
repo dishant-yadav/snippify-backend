@@ -1,0 +1,26 @@
+{% load i18n %}
+
+{% block subject %}
+{% blocktrans %} Account activation on {{ site_name }}{% endblocktrans %}
+{% endblock subject %}
+
+{% block text_body %}
+{% blocktrans %} You're receiving this email because you need to finish activation process on {{ site_name }}.{% endblocktrans %}
+
+{% trans "Please go to the following page to activate account:" %}
+{{ protocol }}://{{ domain }}/{{ url|safe }}
+
+<i>{% blocktrans %}If you face difficulties on account activation kindly contact us on: contact@snippify.com{% endblocktrans %}</i>
+
+{% endblock text_body %}
+
+{% block html_body %}
+<p>{% blocktrans %} You're receiving this email because you need to finish activation process on {{ site_name }}.{% endblocktrans %}</p>
+
+
+<p style="margin-bottom:100px"><a style="display: inline-block; padding: 10px 20px; background-color: red; color: white; text-decoration: none;" href="{{ protocol }}://{{ domain }}/{{ url|safe }}">Activate Account</a></p>
+
+
+<i>{% blocktrans %}If you face difficulties on account activation kindly contact us on: contact@snippify.com{% endblocktrans %}</i>
+
+{% endblock html_body %}
