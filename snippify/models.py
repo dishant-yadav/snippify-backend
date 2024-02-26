@@ -33,6 +33,7 @@ class UserManager(BaseUserManager):
 
 # Custom User Model.
 class User(AbstractBaseUser):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(
         verbose_name="Email",
         max_length=255,
@@ -50,7 +51,7 @@ class User(AbstractBaseUser):
     REQUIRED_FIELDS = ["name", "is_admin"]
 
     def __str__(self):
-        return self.email
+        return self.name
 
     def get_full_name(self):
         return self.name
@@ -98,14 +99,17 @@ class Comment(models.Model):
         User, related_name="commented_posts", on_delete=models.CASCADE
     )
     snippet = models.ForeignKey(
-        "snippify.Snippet", related_name="comment_by", on_delete=models.CASCADE
+        "snippify.Snippet",
+        related_name="comments",
+        on_delete=models.CASCADE,
+        blank=True,
     )
     comment_text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Comment by {self.author.username}"
+        return f"Comment by {self.author.name}"
 
 
 class Snippet(models.Model):
@@ -125,7 +129,7 @@ class Snippet(models.Model):
 
     @property
     def comment_count(self):
-        return self.comment_by.count()
+        return self.comments.count()
 
     @property
     def like_count(self):
@@ -147,10 +151,7 @@ class Code(models.Model):
     code_content = models.TextField()
     # number_of_lines = models.IntegerField()
     snippet = models.ForeignKey(
-        Snippet,
-        related_name="codes",
-        on_delete=models.CASCADE,
-        null=True,
+        Snippet, related_name="codes", on_delete=models.CASCADE, blank=True
     )
 
     def __str__(self):

@@ -2,7 +2,7 @@
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_201_CREATED
+from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_201_CREATED, HTTP_200_OK
 from .models import UserProfile, Comment, Code, Snippet, Like
 from .serializers import (
     UserProfileSerializer,
@@ -12,6 +12,11 @@ from .serializers import (
     SnippetWriteSerializer,
     LikeSerializer,
 )
+
+
+class TestView(APIView):
+    def get(self, request):
+        return Response({"message": "This is a test endpoint"}, status=HTTP_200_OK)
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
@@ -31,19 +36,15 @@ class CodeViewSet(viewsets.ModelViewSet):
 
 class SnippetViewSet(viewsets.ModelViewSet):
     queryset = Snippet.objects.all()
-    serializer_class = SnippetReadSerializer
 
-    """
     def get_serializer_class(self):
         if self.action in ["list", "retrieve"]:
             return SnippetReadSerializer
         return SnippetWriteSerializer
-    """
 
 
 class LikeSnippetView(APIView):
     def post(self, request, snippet_id):
-        print(request)
         user = request.user
         try:
             snippet = Snippet.objects.get(id=snippet_id)

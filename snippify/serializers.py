@@ -34,47 +34,61 @@ class CodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Code
         fields = "__all__"
-        read_only_fields = ("comments, liked_by",)
 
 
 class SnippetReadSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField()
+
+    class Meta:
+        model = Snippet
+        fields = "__all__"
+
+
+class SnippetWriteSerializer(serializers.ModelSerializer):
+    author = serializers.StringRelatedField()
+    comments = CommentSerializer(many=True)
     codes = CodeSerializer(many=True)
 
     class Meta:
         model = Snippet
         fields = "__all__"
-        read_only_fields = ("comments, liked_by",)
 
     def create(self, validated_data):
         codes = validated_data.pop("codes")
+        comments = validated_data.pop("comments")
 
         snippet = Snippet.objects.create(**validated_data)
 
         for code in codes:
-            Code.objects.create(**code, snippet=snippet)
+            Code.objects.create(**code, snippet_id=snippet.id)
+
+        for comment in comments:
+            Comment.objects.create(**comment, snippet_id=snippet.id)
 
         return snippet
 
+    # def update(self, instance, validated_data):
+    #     comments_data = validated_data.pop("comments", None)
+    #     codes_data = validated_data.pop("codes", None)
 
-class SnippetWriteSerializer(serializers.ModelSerializer):
-    author = serializers.StringRelatedField()
-    comments = CommentSerializer(many=True, read_only=True)
-    codes = CodeSerializer(many=True, read_only=True)
+    #     if comments_data is not None:
+    #         instance.comments.set(comments_data)
 
-    class Meta:
-        model = Snippet
-        fields = "__all__"
+    #     if codes_data is not None:
+    #         instance.comments.set(codes_data)
 
-    def create(self, validated_data):
-        codes = validated_data.pop("books")
+    #     return super().update(instance, validated_data)
 
-        snippet = Snippet.objects.create(**validated_data)
+    # def partial_update(self, instance, validated_data):
+    #     comments_data = validated_data.pop("comments", None)
+    #     codes_data = validated_data.pop("codes", None)
 
-        for code in codes:
-            Code.objects.create(**code, snippetId=snippet)
+    #     if comments_data is not None:
+    #         instance.comments.set(comments_data)
 
-        return snippet
+    #     if codes_data is not None:
+    #         instance.comments.set(codes_data)
+    #     return super().partial_update(instance, validated_data)
 
 
 class LikeSerializer(serializers.ModelSerializer):
