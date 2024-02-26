@@ -2,12 +2,13 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-import dotenv
+from dotenv import load_dotenv
 
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.settings")
+    load_dotenv()
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
@@ -20,7 +21,6 @@ def main():
 
 
 if __name__ == "__main__":
-    dotenv.read_dotenv()
     if sys.argv[1] == "runserver":
         if url:=sys.argv[2]:
             print(f"Admin URL : http://{url}/admin")
