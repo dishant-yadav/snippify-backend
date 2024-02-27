@@ -122,6 +122,9 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+STATIC_ROOT =os.path.join(BASE_DIR, 'staticfiles')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
@@ -131,9 +134,7 @@ AUTH_USER_MODEL = "snippify.User"
 
 
 REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES": (
-        "rest_framework.permissions.AllowAny",
-    ),
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.AllowAny",),
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
@@ -147,8 +148,8 @@ SIMPLE_JWT = {
 }
 
 # Frontend URL
-DOMAIN="localhost:5173"
-SITE_NAME="Frontend"
+DOMAIN = "localhost:5173"
+SITE_NAME = "Frontend"
 
 # DJOSER
 DJOSER = {

@@ -12,6 +12,7 @@ db.sqlite3
 
 # Ignore static files directory
 /staticfiles/
+/static/
 
 # Ignore media files directory
 /media/
