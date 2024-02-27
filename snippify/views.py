@@ -43,7 +43,7 @@ class SnippetViewSet(viewsets.ModelViewSet):
         return SnippetWriteSerializer
 
 
-class LikeSnippetView(viewsets.ModelViewSet):
+class LikeSnippetViewSet(viewsets.ModelViewSet):
     queryset = Like.objects.all()
     serializer_class = LikeSerializer
     http_method_names = ("get", "list", "post")

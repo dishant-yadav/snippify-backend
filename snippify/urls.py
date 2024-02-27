@@ -5,16 +5,16 @@ from .views import (
     SnippetViewSet,
     CodeViewSet,
     CommentViewSet,
-    LikeSnippetView,
+    LikeSnippetViewSet,
     TestView,
 )
 
 router = DefaultRouter()
-router.register(r"users/", UserProfileViewSet, basename="user")
-router.register(r"snippets/", SnippetViewSet, basename="snippet")
-router.register(r"codes/", CodeViewSet, basename="code")
-router.register(r"snippets/comments/", CommentViewSet, basename="comment")
-router.register(r"snippets/likes/", LikeSnippetView, basename="comment")
+router.register(r"users", UserProfileViewSet, basename="user")
+router.register(r"snippets", SnippetViewSet, basename="snippet")
+router.register(r"codes", CodeViewSet, basename="code")
+router.register(r"snippets/comments", CommentViewSet, basename="comment")
+router.register(r"snippets/likes", LikeSnippetViewSet, basename="comment")
 
 urlpatterns = [
     path("auth/", include("djoser.urls")),
