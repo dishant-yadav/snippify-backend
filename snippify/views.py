@@ -2,7 +2,7 @@
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_201_CREATED, HTTP_200_OK
+from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_404_NOT_FOUND
 from .models import UserProfile, Comment, Code, Snippet, Like
 from .serializers import (
     UserProfileSerializer,
@@ -43,23 +43,7 @@ class SnippetViewSet(viewsets.ModelViewSet):
         return SnippetWriteSerializer
 
 
-class LikeSnippetView(APIView):
-    def post(self, request, snippet_id):
-        user = request.user
-        try:
-            snippet = Snippet.objects.get(id=snippet_id)
-        except Snippet.DoesNotExist:
-            return Response(
-                {"error": "Snippet does not exist"}, status=HTTP_404_NOT_FOUND
-            )
-        try:
-            like = Like.objects.get(user=user, snippet=snippet)
-            like.is_liked = not like.is_liked
-        except Like.DoesNotExist:
-            like = Like.objects.create(user=user, snippet=snippet)
-
-        like.save()
-
-        serializer = LikeSerializer(like)
-
-        return Response(serializer.data, status=HTTP_201_CREATED)
+class LikeSnippetView(viewsets.ModelViewSet):
+    queryset = Like.objects.all()
+    serializer_class = LikeSerializer
+    http_method_names = ("get", "list", "post")

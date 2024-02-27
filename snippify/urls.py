@@ -21,7 +21,6 @@ urlpatterns = [
     path("auth/", include("djoser.urls.jwt")),
     path("", include(router.urls)),
     path("test/", TestView.as_view()),
-    # path("snippet/like", LikeSnippetView.as_view(), name="like"),
 ]
 
 urlpatterns += router.urls
