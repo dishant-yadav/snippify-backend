@@ -9,4 +9,4 @@ pip install -r requirements.txt
 python3 manage.py makemigrations
 python3 manage.py migrate
 
-python3 manage.py createsuperuser --name admin --email admin@mail.com
+source '.env' && python manage.py createsuperuser --name=admin --email=admin@mail.com --noinput
