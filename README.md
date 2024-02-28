@@ -1,15 +1,34 @@
-### URL Data
+### Deployed URL Backend
 
-Main URL : ```https://snippify-backend.onrender.com/```
+Main URL : 
+```
+https://snippify-backend.onrender.com/
+```
 
-Test URL : ```https://snippify-backend.onrender.com/api/test/```
+Test URL : 
+```
+https://snippify-backend.onrender.com/api/test/
+```
 
-Admin URL : ```https://snippify-backend.onrender.com/admin/```
+Admin URL : 
+```
+https://snippify-backend.onrender.com/admin/
+```
 
 ### Admin Credentials
-Email : admin@mail.com
-Username : admin
-Password : admin123
+
+Email : 
+```
+admin@mail.com
+```
+Username : 
+```
+admin
+```
+Password : 
+```
+admin123
+```
 
 
 ### Features
