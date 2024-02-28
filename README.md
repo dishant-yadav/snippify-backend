@@ -1,8 +1,10 @@
 ### URL Data
 
 Main URL : ```https://snippify-backend.onrender.com/```
-Test URL : ```https://snippify-backend.onrender.com/api/test//```
-Admin URL : ```https://snippify-backend.onrender.com/admin//```
+
+Test URL : ```https://snippify-backend.onrender.com/api/test/```
+
+Admin URL : ```https://snippify-backend.onrender.com/admin/```
 
 ### Admin Credentials
 Email : admin@mail.com
