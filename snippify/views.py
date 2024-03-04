@@ -22,6 +22,7 @@ class TestView(APIView):
 class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
+    http_method_names = ["list", "get", "patch"]
 
 
 class CommentViewSet(viewsets.ModelViewSet):
