@@ -2,7 +2,7 @@
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_404_NOT_FOUND
+from rest_framework.status import HTTP_200_OK
 from .models import UserProfile, Comment, Code, Snippet, Like
 from .serializers import (
     UserProfileSerializer,
@@ -27,6 +27,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+    http_method_names = ["list", "get", "post", "patch"]
 
 
 class CodeViewSet(viewsets.ModelViewSet):
@@ -36,6 +37,7 @@ class CodeViewSet(viewsets.ModelViewSet):
 
 class SnippetViewSet(viewsets.ModelViewSet):
     queryset = Snippet.objects.all()
+    http_method_names = ["list", "get", "post", "patch"]
 
     def get_serializer_class(self):
         if self.action in ["list", "retrieve"]:
@@ -46,4 +48,4 @@ class SnippetViewSet(viewsets.ModelViewSet):
 class LikeSnippetViewSet(viewsets.ModelViewSet):
     queryset = Like.objects.all()
     serializer_class = LikeSerializer
-    http_method_names = ("get", "list", "post")
+    http_method_names = ["list", "get", "post", "patch"]

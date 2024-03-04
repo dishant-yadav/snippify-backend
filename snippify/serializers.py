@@ -14,39 +14,99 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
+        # put in proper order
         fields = "__all__"
 
-    # def get_snippet_count(self, obj):
-    #     return {
-    #         "public": obj.user.snippets.filter(visibility="public").count(),
-    #         "private": obj.user.snippets.filter(visibility="private").count(),
-    #         "total": obj.user.snippets.count(),
-    #     }
+    def get_snippet_count(self, obj):
+        return {
+            "public": obj.user.snippets.filter(visibility="public").count(),
+            "private": obj.user.snippets.filter(visibility="private").count(),
+            "total": obj.user.snippets.count(),
+        }
 
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = "__all__"
+        fields = (
+            "id",
+            "user",
+            "snippet",
+            "comment_text",
+            "created_at",
+            "updated_at",
+        )
+
+
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        fields = (
+            "id",
+            "user",
+            "snippet",
+            "is_liked",
+            "created_at",
+            "updated_at",
+        )
 
 
 class CodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Code
-        fields = "__all__"
+        fields = (
+            "id",
+            "title",
+            "file_name",
+            "description",
+            "language",
+            "code_content",
+            "snippet",
+            "created_at",
+            "updated_at",
+        )
 
 
 class SnippetReadSerializer(serializers.ModelSerializer):
-    author = serializers.StringRelatedField()
+    comments = CommentSerializer(many=True)
+    liked_by = LikeSerializer(many=True)
+    codes = CodeSerializer(many=True)
+
+    codes_count = serializers.SerializerMethodField()
+    comments_count = serializers.SerializerMethodField()
+    liked_by_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Snippet
-        fields = "__all__"
+        fields = (
+            "id",
+            "owner",
+            "visibility",
+            "title",
+            "description",
+            "language",
+            "codes_count",
+            "codes",
+            "comments_count",
+            "comments",
+            "liked_by_count",
+            "liked_by",
+            "created_at",
+            "updated_at",
+        )
+
+    def get_codes_count(self, obj):
+        return obj.codes.count()
+
+    def get_comments_count(self, obj):
+        return obj.comments.count()
+
+    def get_liked_by_count(self, obj):
+        return obj.liked_by.count()
 
 
 class SnippetWriteSerializer(serializers.ModelSerializer):
-    author = serializers.StringRelatedField()
-    comments = CommentSerializer(many=True)
+    user = serializers.StringRelatedField()
     codes = CodeSerializer(many=True)
 
     class Meta:
@@ -55,43 +115,10 @@ class SnippetWriteSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         codes = validated_data.pop("codes")
-        comments = validated_data.pop("comments")
 
         snippet = Snippet.objects.create(**validated_data)
 
         for code in codes:
             Code.objects.create(**code, snippet_id=snippet.id)
 
-        for comment in comments:
-            Comment.objects.create(**comment, snippet_id=snippet.id)
-
         return snippet
-
-    # def update(self, instance, validated_data):
-    #     comments_data = validated_data.pop("comments", None)
-    #     codes_data = validated_data.pop("codes", None)
-
-    #     if comments_data is not None:
-    #         instance.comments.set(comments_data)
-
-    #     if codes_data is not None:
-    #         instance.comments.set(codes_data)
-
-    #     return super().update(instance, validated_data)
-
-    # def partial_update(self, instance, validated_data):
-    #     comments_data = validated_data.pop("comments", None)
-    #     codes_data = validated_data.pop("codes", None)
-
-    #     if comments_data is not None:
-    #         instance.comments.set(comments_data)
-
-    #     if codes_data is not None:
-    #         instance.comments.set(codes_data)
-    #     return super().partial_update(instance, validated_data)
-
-
-class LikeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Like
-        fields = "__all__"

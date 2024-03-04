@@ -13,8 +13,8 @@ router = DefaultRouter()
 router.register(r"users", UserProfileViewSet, basename="user")
 router.register(r"snippets", SnippetViewSet, basename="snippet")
 router.register(r"codes", CodeViewSet, basename="code")
-router.register(r"snippets/comments", CommentViewSet, basename="comment")
-router.register(r"snippets/likes", LikeSnippetViewSet, basename="comment")
+router.register(r"comments", CommentViewSet, basename="comment")
+router.register(r"likes", LikeSnippetViewSet, basename="comment")
 
 urlpatterns = [
     path("auth/", include("djoser.urls")),

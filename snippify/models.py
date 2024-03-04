@@ -95,7 +95,7 @@ class UserProfile(models.Model):
 
 class Comment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    author = models.ForeignKey(
+    user = models.ForeignKey(
         User, related_name="commented_posts", on_delete=models.CASCADE
     )
     snippet = models.ForeignKey(
@@ -109,7 +109,7 @@ class Comment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Comment by {self.author.name}"
+        return f"Comment by {self.user.name}"
 
 
 class Snippet(models.Model):
@@ -159,6 +159,7 @@ class Code(models.Model):
 
 
 class Like(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, related_name="liked_posts", on_delete=models.CASCADE)
     snippet = models.ForeignKey(
         Snippet, related_name="liked_by", on_delete=models.CASCADE
