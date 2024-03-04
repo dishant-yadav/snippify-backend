@@ -29,7 +29,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "snippify",
+    # "snippify"
+    "snippify.apps.SnippifyConfig",
     "rest_framework",
     "djoser",
     "corsheaders",

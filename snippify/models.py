@@ -58,27 +58,30 @@ class User(AbstractBaseUser):
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"
-        # Simplest possible answer: Yes, always
         return self.is_admin
 
     def has_module_perms(self, app_label):
         "Does the user have permissions to view the app `app_label`?"
-        # Simplest possible answer: Yes, always
         return True
 
     @property
     def is_staff(self):
         "Is the user a member of staff?"
-        # Simplest possible answer: All admins are staff
         return self.is_admin
 
 
 class UserProfile(models.Model):
+
+    def tech_stack_default_value():
+        return ["React", "Django"]
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     image = models.ImageField(null=True)
-    bio = models.TextField(null=True)
-    tech_stack = models.JSONField(null=True)
+    bio = models.TextField(default="I am full stack developer!!!")
+    tech_stack = models.JSONField(default=tech_stack_default_value)
+
+    # social links
 
     @property
     def snippet_count(self):
