@@ -9,20 +9,51 @@ class UserCreateSerializer(UserCreateSerializer):
         fields = ("id", "email", "name", "password")
 
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            "id",
+            "name",
+            "email",
+        )
+
+
 class UserProfileSerializer(serializers.ModelSerializer):
-    snippet_count = serializers.SerializerMethodField()
+    user = UserSerializer()
+    snippets_count = serializers.SerializerMethodField()
+    liked_posts_count = serializers.SerializerMethodField()
+    commented_posts_count = serializers.SerializerMethodField()
 
     class Meta:
         model = UserProfile
-        # put in proper order
-        fields = "__all__"
+        fields = [
+            "id",
+            "user",
+            "bio",
+            "tech_stack",
+            "image",
+            "snippets_count",
+            "snippets",
+            "liked_posts_count",
+            "liked_posts",
+            "commented_posts_count",
+            "commented_posts",
+        ]
 
-    def get_snippet_count(self, obj):
-        return {
-            "public": obj.user.snippets.filter(visibility="public").count(),
-            "private": obj.user.snippets.filter(visibility="private").count(),
-            "total": obj.user.snippets.count(),
+    def get_snippets_count(self, obj):
+        snippet_count = {
+            "public": obj.snippets.filter(visibility="public").count(),
+            "private": obj.snippets.filter(visibility="private").count(),
+            "total": obj.snippets.count(),
         }
+        return snippet_count
+
+    def get_liked_posts_count(self, obj):
+        return obj.liked_posts.count()
+
+    def get_commented_posts_count(self, obj):
+        return obj.commented_posts.count()
 
 
 class CommentSerializer(serializers.ModelSerializer):

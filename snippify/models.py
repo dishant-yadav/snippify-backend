@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+import pathlib
 
 
 # Custom User Manager
@@ -16,7 +17,9 @@ class UserManager(BaseUserManager):
         )
         user.set_password(password)
         user.save(using=self._db)
-        UserProfile.objects.create(user=user)
+        if not user.is_admin:
+            UserProfile.objects.create(user=user, id=user.id)
+
         return user
 
     def create_superuser(self, email, name, is_admin=True, password=None):
@@ -72,25 +75,23 @@ class User(AbstractBaseUser):
 
 class UserProfile(models.Model):
 
+    def user_directory_path(instance, filename):
+        file_name = instance.user.id
+        file_extension = pathlib.Path(filename).suffix
+        file_full_name = f"user_{file_name}{file_extension}"
+        images_dir = "profiles"
+        return f"{images_dir}/{file_full_name}"
+
     def tech_stack_default_value():
         return ["React", "Django"]
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    image = models.ImageField(null=True)
+    image = models.ImageField(null=True, upload_to=user_directory_path)
     bio = models.TextField(default="I am full stack developer!!!")
     tech_stack = models.JSONField(default=tech_stack_default_value)
 
     # social links
-
-    @property
-    def snippet_count(self):
-        snippet_count = {
-            "public": self.user.snippets.filter(visibility="public").count(),
-            "private": self.user.snippets.filter(visibility="private").count(),
-            "total": self.user.snippets.count(),
-        }
-        return snippet_count
 
     def __str__(self):
         return self.user.name
@@ -99,7 +100,7 @@ class UserProfile(models.Model):
 class Comment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(
-        User, related_name="commented_posts", on_delete=models.CASCADE
+        UserProfile, related_name="commented_posts", on_delete=models.CASCADE
     )
     snippet = models.ForeignKey(
         "snippify.Snippet",
@@ -127,16 +128,10 @@ class Snippet(models.Model):
     language = models.JSONField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    owner = models.ForeignKey(User, related_name="snippets", on_delete=models.CASCADE)
+    owner = models.ForeignKey(
+        UserProfile, related_name="snippets", on_delete=models.CASCADE
+    )
     visibility = models.CharField(max_length=10, choices=VISIBILITY_CHOICES)
-
-    @property
-    def comment_count(self):
-        return self.comments.count()
-
-    @property
-    def like_count(self):
-        return self.liked_by.count()
 
     def __str__(self):
         return self.title
@@ -163,7 +158,9 @@ class Code(models.Model):
 
 class Like(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(User, related_name="liked_posts", on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        UserProfile, related_name="liked_posts", on_delete=models.CASCADE
+    )
     snippet = models.ForeignKey(
         Snippet, related_name="liked_by", on_delete=models.CASCADE
     )
@@ -173,3 +170,6 @@ class Like(models.Model):
 
     def __str__(self):
         return f"Likes {self.id}"
+
+    class Meta:
+        unique_together = ("user", "snippet")
