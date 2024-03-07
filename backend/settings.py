@@ -72,10 +72,18 @@ WSGI_APPLICATION = "backend.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+
+def get_db_name(debug_value):
+    if debug_value:
+        return "db.sqlite3"
+    else:
+        return "db.sqlite3_prod"
+
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": BASE_DIR / get_db_name(debug_value=True),
     }
 }
 
