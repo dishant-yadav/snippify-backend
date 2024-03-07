@@ -10,4 +10,4 @@ python3 manage.py migrate
 # python3 manage.py migrate snippify
 python3 manage.py migrate --run-syncdb
 
-python manage.py createsuperuser --name=admin --email=admin@mail.com --noinput
+python3 manage.py createsuperuser --name=admin --email=admin@mail.com --is_admin=True --noinput

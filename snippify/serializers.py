@@ -20,6 +20,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    # prevent changing of foreign key id
+
     user = UserSerializer()
     snippets_count = serializers.SerializerMethodField()
     liked_posts_count = serializers.SerializerMethodField()
@@ -57,6 +59,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    # prevent changing of foreign key id
+
     class Meta:
         model = Comment
         fields = (
@@ -70,6 +74,8 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class LikeSerializer(serializers.ModelSerializer):
+    # prevent changing of foreign key id
+
     class Meta:
         model = Like
         fields = (
@@ -83,6 +89,7 @@ class LikeSerializer(serializers.ModelSerializer):
 
 
 class CodeSerializer(serializers.ModelSerializer):
+    # prevent changing of foreign key id
     class Meta:
         model = Code
         fields = (
@@ -99,6 +106,8 @@ class CodeSerializer(serializers.ModelSerializer):
 
 
 class SnippetReadSerializer(serializers.ModelSerializer):
+    # prevent changing of foreign key id
+
     comments = CommentSerializer(many=True)
     liked_by = LikeSerializer(many=True)
     codes = CodeSerializer(many=True)
@@ -137,6 +146,8 @@ class SnippetReadSerializer(serializers.ModelSerializer):
 
 
 class SnippetWriteSerializer(serializers.ModelSerializer):
+    # prevent changing of foreign key id
+
     user = serializers.StringRelatedField()
     codes = CodeSerializer(many=True)
 
