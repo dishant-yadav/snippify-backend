@@ -33,7 +33,7 @@ admin123
 
 ### Features
 
-1. Must Haves
+1. Must Have
 		
 	1. **Code Sharing:**
 	   - Users can create and share code snippets.
