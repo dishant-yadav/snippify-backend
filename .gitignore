@@ -9,7 +9,7 @@
 
 # Ignore database files
 db.sqlite3
-db.sqlite3_dev
+dev.db.sqlite3
 
 # Ignore static files directory
 /staticfiles/

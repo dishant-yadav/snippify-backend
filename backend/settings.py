@@ -77,7 +77,7 @@ def get_db_name(debug_value):
     if debug_value:
         return "db.sqlite3"
     else:
-        return "db.sqlite3_prod"
+        return "prod.db.sqlite3"
 
 
 DATABASES = {
