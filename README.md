@@ -84,7 +84,7 @@ admin123
 	   - Generate comments and tests
 ---
 
-### Models and Schema
+### Models and Schemas
 
 1. Snippet
 
