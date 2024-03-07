@@ -143,7 +143,8 @@ AUTH_USER_MODEL = "snippify.User"
 
 
 REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.AllowAny",),
+    # change before final deploy
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
@@ -151,10 +152,11 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("JWT"),
+    # change before final deploy
     # "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     # "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-    "ACCESS_TOKEN_LIFETIME": timedelta(weeks=2),
-    "REFRESH_TOKEN_LIFETIME": timedelta(weeks=4),
+    "ACCESS_TOKEN_LIFETIME": timedelta(weeks=6),
+    "REFRESH_TOKEN_LIFETIME": timedelta(weeks=8),
     "UPDATE_LAST_LOGIN": True,
 }
 

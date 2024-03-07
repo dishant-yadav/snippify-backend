@@ -18,7 +18,7 @@ class UserManager(BaseUserManager):
         user.set_password(password)
         user.save(using=self._db)
         if not user.is_admin:
-            UserProfile.objects.create(user=user, id=user.id)
+            UserProfile.objects.create(user=user)
 
         return user
 
@@ -100,13 +100,17 @@ class UserProfile(models.Model):
 class Comment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(
-        UserProfile, related_name="commented_posts", on_delete=models.CASCADE
+        UserProfile,
+        related_name="commented_posts",
+        on_delete=models.CASCADE,
+        # editable=False,
     )
     snippet = models.ForeignKey(
         "snippify.Snippet",
         related_name="comments",
         on_delete=models.CASCADE,
         blank=True,
+        # editable=False,
     )
     comment_text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -129,7 +133,10 @@ class Snippet(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     owner = models.ForeignKey(
-        UserProfile, related_name="snippets", on_delete=models.CASCADE
+        UserProfile,
+        related_name="snippets",
+        on_delete=models.CASCADE,
+        # editable=False,
     )
     visibility = models.CharField(max_length=10, choices=VISIBILITY_CHOICES)
 
@@ -149,7 +156,11 @@ class Code(models.Model):
     code_content = models.TextField()
     # number_of_lines = models.IntegerField()
     snippet = models.ForeignKey(
-        Snippet, related_name="codes", on_delete=models.CASCADE, blank=True
+        Snippet,
+        related_name="codes",
+        on_delete=models.CASCADE,
+        blank=True,
+        # editable=False,
     )
 
     def __str__(self):
@@ -159,10 +170,16 @@ class Code(models.Model):
 class Like(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(
-        UserProfile, related_name="liked_posts", on_delete=models.CASCADE
+        UserProfile,
+        related_name="liked_posts",
+        on_delete=models.CASCADE,
+        # editable=False,
     )
     snippet = models.ForeignKey(
-        Snippet, related_name="liked_by", on_delete=models.CASCADE
+        Snippet,
+        related_name="liked_by",
+        on_delete=models.CASCADE,
+        # editable=False,
     )
     is_liked = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)

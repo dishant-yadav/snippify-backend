@@ -19,8 +19,8 @@ router.register(r"likes", LikeSnippetViewSet, basename="comment")
 urlpatterns = [
     path("auth/", include("djoser.urls")),
     path("auth/", include("djoser.urls.jwt")),
-    path("", include(router.urls)),
     path("test/", TestView.as_view()),
+    path("", include(router.urls)),
 ]
 
 urlpatterns += router.urls
