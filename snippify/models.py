@@ -18,7 +18,7 @@ class UserManager(BaseUserManager):
         user.set_password(password)
         user.save(using=self._db)
         if not user.is_admin:
-            UserProfile.objects.create(user=user)
+            UserProfile.objects.create(user=user, id=user.id)
 
         return user
 

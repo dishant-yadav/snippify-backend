@@ -1,3 +1,4 @@
+rm -rf db.sqlite3
 python3.8 -m pip install --upgrade pip
 pip install -r requirements.txt
 python3 manage.py makemigrations
