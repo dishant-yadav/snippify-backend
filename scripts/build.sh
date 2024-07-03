@@ -1,13 +1,14 @@
 python3 -m pip install --upgrade pip
-pip install -r requirements.txt
+pip install -r ./../requirements.txt
 
-python manage.py collectstatic --no-input
+python ./../manage.py collectstatic --no-input
 
-python3 manage.py makemigrations
-python3 manage.py migrate
+python3 ./../manage.py makemigrations
+python3 ./../manage.py migrate
 
 # python3 manage.py makemigrations snippify
 # python3 manage.py migrate snippify
-python3 manage.py migrate --run-syncdb
 
-python3 manage.py createsuperuser --name=admin --email=admin@mail.com --is_admin=True --noinput
+python3 ./../manage.py migrate --run-syncdb
+
+python3 ./../manage.py createsuperuser --name=admin --email=admin@mail.com --is_admin=True --noinput
