@@ -16,7 +16,7 @@ router.register(r"codes", CodeViewSet, basename="code")
 router.register(r"comments", CommentViewSet, basename="comment")
 router.register(r"likes", LikeSnippetViewSet, basename="comment")
 
-urlpatterns = [
+urlpatterns = [ 
     path("auth/", include("djoser.urls")),
     path("auth/", include("djoser.urls.jwt")),
     path("test/", TestView.as_view()),
