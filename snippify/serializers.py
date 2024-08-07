@@ -115,6 +115,7 @@ class SnippetReadSerializer(serializers.ModelSerializer):
     codes_count = serializers.SerializerMethodField()
     comments_count = serializers.SerializerMethodField()
     liked_by_count = serializers.SerializerMethodField()
+    owner = serializers.SerializerMethodField()
 
     class Meta:
         model = Snippet
@@ -135,6 +136,10 @@ class SnippetReadSerializer(serializers.ModelSerializer):
             "updated_at",
         )
 
+    def get_owner(self, obj):
+        user = obj.owner
+        return UserSerializer(user.user).data
+
     def get_codes_count(self, obj):
         return obj.codes.count()
 
@@ -142,7 +147,7 @@ class SnippetReadSerializer(serializers.ModelSerializer):
         return obj.comments.count()
 
     def get_liked_by_count(self, obj):
-        return obj.liked_by.count()
+        return obj.liked_by.filter(is_liked=True).count()
 
 
 class SnippetWriteSerializer(serializers.ModelSerializer):
