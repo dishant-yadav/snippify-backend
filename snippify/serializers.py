@@ -24,6 +24,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     user = UserSerializer()
     snippets_count = serializers.SerializerMethodField()
+    liked_posts = serializers.SerializerMethodField()
     liked_posts_count = serializers.SerializerMethodField()
     commented_posts_count = serializers.SerializerMethodField()
 
@@ -51,8 +52,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
         }
         return snippet_count
 
+    def get_liked_posts(self, obj):
+        return obj.liked_posts.filter(is_liked=True)
+
     def get_liked_posts_count(self, obj):
-        return obj.liked_posts.count()
+        return obj.liked_posts.filter(is_liked=True).count()
 
     def get_commented_posts_count(self, obj):
         return obj.commented_posts.count()
@@ -60,6 +64,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     # prevent changing of foreign key id
+
+    user = UserProfileSerializer()
 
     class Meta:
         model = Comment
