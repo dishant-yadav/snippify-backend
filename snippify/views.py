@@ -69,3 +69,33 @@ class SnippetsByUserView(ListAPIView):
     def get_queryset(self):
         user_id = self.kwargs["user_id"]
         return Snippet.objects.filter(owner=user_id)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+
+        response_data = {
+            "snippets_count": queryset.count(),
+            "snippets": serializer.data,
+        }
+
+        return Response(response_data)
+
+
+class SaveSnippetsByUserView(ListAPIView):
+    serializer_class = SaveSerializer
+
+    def get_queryset(self):
+        user_id = self.kwargs["user_id"]
+        return Save.objects.filter(user=user_id).filter(is_saved=True)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+
+        response_data = {
+            "saved_snippets_count": queryset.count(),
+            "saved_snippets": serializer.data,
+        }
+
+        return Response(response_data)
