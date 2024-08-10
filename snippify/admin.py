@@ -1,5 +1,5 @@
 from django.contrib import admin
-from snippify.models import User, UserProfile, Snippet, Code, Comment, Like
+from snippify.models import User, UserProfile, Snippet, Code, Comment, Like, Save
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 
@@ -37,3 +37,4 @@ admin.site.register(Snippet)
 admin.site.register(Code)
 admin.site.register(Comment)
 admin.site.register(Like)
+admin.site.register(Save)

@@ -1,6 +1,6 @@
 from djoser.serializers import UserCreateSerializer
 from rest_framework import serializers
-from .models import User, UserProfile, Comment, Code, Snippet, Like
+from .models import User, UserProfile, Comment, Code, Snippet, Like, Save
 
 
 class UserCreateSerializer(UserCreateSerializer):
@@ -89,6 +89,21 @@ class LikeSerializer(serializers.ModelSerializer):
             "user",
             "snippet",
             "is_liked",
+            "created_at",
+            "updated_at",
+        )
+
+
+class SaveSerializer(serializers.ModelSerializer):
+    # prevent changing of foreign key id
+
+    class Meta:
+        model = Save
+        fields = (
+            "id",
+            "user",
+            "snippet",
+            "is_saved",
             "created_at",
             "updated_at",
         )

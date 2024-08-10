@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework.status import HTTP_200_OK
 from rest_framework.generics import ListAPIView
-from .models import UserProfile, Comment, Code, Snippet, Like
+from .models import UserProfile, Comment, Code, Snippet, Like, Save
 from .serializers import (
     UserProfileSerializer,
     CommentSerializer,
@@ -13,6 +13,7 @@ from .serializers import (
     SnippetReadSerializer,
     SnippetWriteSerializer,
     LikeSerializer,
+    SaveSerializer,
 )
 
 
@@ -53,6 +54,12 @@ class SnippetViewSet(viewsets.ModelViewSet):
 class LikeSnippetViewSet(viewsets.ModelViewSet):
     queryset = Like.objects.all()
     serializer_class = LikeSerializer
+    http_method_names = ["list", "get", "post", "patch", "delete"]
+
+
+class SaveSnippetViewSet(viewsets.ModelViewSet):
+    queryset = Save.objects.all()
+    serializer_class = SaveSerializer
     http_method_names = ["list", "get", "post", "patch", "delete"]
 
 

@@ -190,3 +190,28 @@ class Like(models.Model):
 
     class Meta:
         unique_together = ("user", "snippet")
+
+
+class Save(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(
+        UserProfile,
+        related_name="saved_posts",
+        on_delete=models.CASCADE,
+        # editable=False,
+    )
+    snippet = models.ForeignKey(
+        Snippet,
+        related_name="saved_by",
+        on_delete=models.CASCADE,
+        # editable=False,
+    )
+    is_saved = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Saved {self.id}"
+
+    class Meta:
+        unique_together = ("user", "snippet")
