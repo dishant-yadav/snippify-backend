@@ -115,13 +115,15 @@ class SnippetReadSerializer(serializers.ModelSerializer):
     # prevent changing of foreign key id
 
     comments = CommentSerializer(many=True)
-    liked_by = LikeSerializer(many=True)
     codes = CodeSerializer(many=True)
+    owner = UserProfileSerializer()
 
     codes_count = serializers.SerializerMethodField()
     comments_count = serializers.SerializerMethodField()
+    liked_by = serializers.SerializerMethodField()
     liked_by_count = serializers.SerializerMethodField()
-    owner = serializers.SerializerMethodField()
+    
+    
 
     class Meta:
         model = Snippet
@@ -142,15 +144,15 @@ class SnippetReadSerializer(serializers.ModelSerializer):
             "updated_at",
         )
 
-    def get_owner(self, obj):
-        user = obj.owner
-        return UserSerializer(user.user).data
-
     def get_codes_count(self, obj):
         return obj.codes.count()
 
     def get_comments_count(self, obj):
         return obj.comments.count()
+    
+    def get_liked_by(self, obj):
+        return obj.liked_by.filter(is_liked=True)
+
 
     def get_liked_by_count(self, obj):
         return obj.liked_by.filter(is_liked=True).count()

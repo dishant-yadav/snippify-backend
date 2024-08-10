@@ -7,6 +7,7 @@ from .views import (
     CommentViewSet,
     LikeSnippetViewSet,
     TestView,
+    SnippetsByUserView
 )
 
 router = DefaultRouter()
@@ -20,6 +21,11 @@ urlpatterns = [
     path("auth/", include("djoser.urls")),
     path("auth/", include("djoser.urls.jwt")),
     path("test/", TestView.as_view()),
+    path(
+        "snippets/user/<uuid:user_id>/",
+        SnippetsByUserView.as_view(),
+        name="snippets-by-user"
+    ),
     path("", include(router.urls)),
 ]
 

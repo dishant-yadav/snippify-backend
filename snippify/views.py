@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework.status import HTTP_200_OK
+from rest_framework.generics import ListAPIView
 from .models import UserProfile, Comment, Code, Snippet, Like
 from .serializers import (
     UserProfileSerializer,
@@ -53,3 +54,11 @@ class LikeSnippetViewSet(viewsets.ModelViewSet):
     queryset = Like.objects.all()
     serializer_class = LikeSerializer
     http_method_names = ["list", "get", "post", "patch", "delete"]
+
+
+class SnippetsByUserView(ListAPIView):
+    serializer_class = SnippetReadSerializer
+
+    def get_queryset(self):
+        user_id = self.kwargs["user_id"]
+        return Snippet.objects.filter(owner=user_id)
