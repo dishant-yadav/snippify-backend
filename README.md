@@ -97,7 +97,7 @@ admin123
 	  createdAt: Date;
 	  updatedAt: Date;
 	  author: string;
-	  owner: UserIDType; // Assuming UserIDType is a predefined         type for user identification
+	  user: UserIDType; // Assuming UserIDType is a predefined         type for user identification
 	  visibility: 'public' | 'private'; // Enum for visibility
 	  upvote: {
 	    count: number;

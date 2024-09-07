@@ -19,10 +19,40 @@ class UserSerializer(serializers.ModelSerializer):
         )
 
 
+class UserViewSerializer(serializers.ModelSerializer):
+
+    id = serializers.SerializerMethodField()
+    name = serializers.SerializerMethodField()
+    email = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ("id", "name", "email", "image")
+
+    def get_id(self, obj):
+        return obj.id
+
+    def get_name(self, obj):
+        name = User.objects.get(id=obj.id).name
+        return name
+
+    def get_email(self, obj):
+        email = User.objects.get(id=obj.id).email
+        return email
+
+    def get_image(self, obj):
+        image = UserProfile.objects.get(id=obj.id).image
+        if image:
+            return image
+        else:
+            return ""
+
+
 class UserProfileSerializer(serializers.ModelSerializer):
     # prevent changing of foreign key id
 
-    user = UserSerializer()
+    user = UserViewSerializer()
     snippets_count = serializers.SerializerMethodField()
     liked_posts = serializers.SerializerMethodField()
     liked_posts_count = serializers.SerializerMethodField()
@@ -62,10 +92,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return obj.commented_posts.count()
 
 
-class CommentSerializer(serializers.ModelSerializer):
+class CommentReadSerializer(serializers.ModelSerializer):
     # prevent changing of foreign key id
 
-    user = UserProfileSerializer()
+    user = UserViewSerializer()
 
     class Meta:
         model = Comment
@@ -79,7 +109,39 @@ class CommentSerializer(serializers.ModelSerializer):
         )
 
 
-class LikeSerializer(serializers.ModelSerializer):
+class CommentWriteSerializer(serializers.ModelSerializer):
+    # prevent changing of foreign key id
+
+    class Meta:
+        model = Comment
+        fields = (
+            "id",
+            "user",
+            "snippet",
+            "comment_text",
+            "created_at",
+            "updated_at",
+        )
+
+
+class LikeReadSerializer(serializers.ModelSerializer):
+    # prevent changing of foreign key id
+
+    user = UserViewSerializer()
+
+    class Meta:
+        model = Like
+        fields = (
+            "id",
+            "user",
+            "snippet",
+            "is_liked",
+            "created_at",
+            "updated_at",
+        )
+
+
+class LikeWriteSerializer(serializers.ModelSerializer):
     # prevent changing of foreign key id
 
     class Meta:
@@ -94,7 +156,24 @@ class LikeSerializer(serializers.ModelSerializer):
         )
 
 
-class SaveSerializer(serializers.ModelSerializer):
+class SaveReadSerializer(serializers.ModelSerializer):
+    # prevent changing of foreign key id
+
+    user = UserViewSerializer()
+
+    class Meta:
+        model = Save
+        fields = (
+            "id",
+            "user",
+            "snippet",
+            "is_saved",
+            "created_at",
+            "updated_at",
+        )
+
+
+class SaveWriteSerializer(serializers.ModelSerializer):
     # prevent changing of foreign key id
 
     class Meta:
@@ -129,21 +208,20 @@ class CodeSerializer(serializers.ModelSerializer):
 class SnippetReadSerializer(serializers.ModelSerializer):
     # prevent changing of foreign key id
 
-    comments = CommentSerializer(many=True)
+    comments = CommentReadSerializer(many=True)
     codes = CodeSerializer(many=True)
-    owner = UserProfileSerializer()
+    owner = UserViewSerializer()
 
     codes_count = serializers.SerializerMethodField()
     comments_count = serializers.SerializerMethodField()
     liked_by = serializers.SerializerMethodField()
     liked_by_count = serializers.SerializerMethodField()
-    
-    
 
     class Meta:
         model = Snippet
         fields = (
             "id",
+            "owner",
             "owner",
             "visibility",
             "title",
@@ -164,10 +242,9 @@ class SnippetReadSerializer(serializers.ModelSerializer):
 
     def get_comments_count(self, obj):
         return obj.comments.count()
-    
+
     def get_liked_by(self, obj):
         return obj.liked_by.filter(is_liked=True)
-
 
     def get_liked_by_count(self, obj):
         return obj.liked_by.filter(is_liked=True).count()

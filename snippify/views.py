@@ -8,12 +8,15 @@ from rest_framework.generics import ListAPIView
 from .models import UserProfile, Comment, Code, Snippet, Like, Save
 from .serializers import (
     UserProfileSerializer,
-    CommentSerializer,
     CodeSerializer,
     SnippetReadSerializer,
     SnippetWriteSerializer,
-    LikeSerializer,
-    SaveSerializer,
+    LikeReadSerializer,
+    LikeWriteSerializer,
+    CommentReadSerializer,
+    CommentWriteSerializer,
+    SaveReadSerializer,
+    SaveWriteSerializer,
 )
 
 
@@ -28,12 +31,6 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
     http_method_names = ["list", "get", "patch"]
-
-
-class CommentViewSet(viewsets.ModelViewSet):
-    queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
-    http_method_names = ["list", "get", "post", "patch", "delete"]
 
 
 class CodeViewSet(viewsets.ModelViewSet):
@@ -53,14 +50,32 @@ class SnippetViewSet(viewsets.ModelViewSet):
 
 class LikeSnippetViewSet(viewsets.ModelViewSet):
     queryset = Like.objects.all()
-    serializer_class = LikeSerializer
     http_method_names = ["list", "get", "post", "patch", "delete"]
+
+    def get_serializer_class(self):
+        if self.action in ["list", "retrieve"]:
+            return LikeReadSerializer
+        return LikeWriteSerializer
+
+
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
+    http_method_names = ["list", "get", "post", "patch", "delete"]
+
+    def get_serializer_class(self):
+        if self.action in ["list", "retrieve"]:
+            return CommentReadSerializer
+        return CommentWriteSerializer
 
 
 class SaveSnippetViewSet(viewsets.ModelViewSet):
     queryset = Save.objects.all()
-    serializer_class = SaveSerializer
     http_method_names = ["list", "get", "post", "patch", "delete"]
+
+    def get_serializer_class(self):
+        if self.action in ["list", "retrieve"]:
+            return SaveReadSerializer
+        return SaveWriteSerializer
 
 
 class SnippetsByUserView(ListAPIView):
@@ -83,7 +98,7 @@ class SnippetsByUserView(ListAPIView):
 
 
 class SaveSnippetsByUserView(ListAPIView):
-    serializer_class = SaveSerializer
+    serializer_class = SaveReadSerializer
 
     def get_queryset(self):
         user_id = self.kwargs["user_id"]
